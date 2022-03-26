@@ -1,4 +1,5 @@
 import ctypes
+from functools import reduce
 
 
 class Int:
@@ -10,6 +11,11 @@ class Int:
             self.bits = args[0]
         else:
             raise Exception()
+
+    def split(self, *sizes):
+        assert len(self.bits) == sum(sizes)
+        sizes = reduce(lambda lt, s: lt + [(s, sum(lt[-1]))], sizes, [(0, 0)])
+        yield from (Int(self.bits[off : off + size]) for size, off in sizes)
 
     def __matmul__(self, other):
         return Int(self.bits + other.bits)
