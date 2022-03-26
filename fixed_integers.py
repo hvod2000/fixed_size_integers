@@ -34,7 +34,8 @@ class Int:
         return sum(b.value * 2**p for p, b in enumerate(self.bits))
 
     @value.setter
-    def set_value(self, value):
+    def value(self, value):
+        value = int(value)
         for i, bit in enumerate(self.bits):
             bit.value = (value >> i) & 1
 
