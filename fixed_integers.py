@@ -35,3 +35,12 @@ class Int:
     def set_value(self, value):
         for i, bit in enumerate(self.bits):
             bit.value = (value >> i) & 1
+
+    @property
+    def u(self):
+        return self.value
+
+    @property
+    def i(self):
+        value, size = self.value, len(self.bits)
+        return (value - 2 ** (size - 1)) % 2**size - 2 ** (size - 1)
