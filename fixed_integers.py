@@ -3,7 +3,7 @@ import numberizator
 from functools import reduce
 
 
-@numberizator.numberizate
+@numberizator.numberizate(assignment = lambda e: f"self @= {e}")
 class Int:
     def __init__(self, *args):
         if len(args) == 2:
@@ -47,20 +47,6 @@ class Int:
     def i(self):
         value, size = self.value, len(self.bits)
         return (value - 2 ** (size - 1)) % 2**size - 2 ** (size - 1)
-
-    def __add__(self, other):
-        return self.u + other.u
-
-    def __iadd__(self, other):
-        self @= self + other
-        return self
-
-    def __sub__(self, other):
-        return self.u - other.u
-
-    def __isub__(self, other):
-        self @= self - other
-        return self
 
     def __int__(self):
         return self.i
