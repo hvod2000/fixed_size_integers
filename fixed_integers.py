@@ -1,7 +1,9 @@
 import ctypes
+import numberizator
 from functools import reduce
 
 
+@numberizator.numberizate
 class Int:
     def __init__(self, *args):
         if len(args) == 2:
