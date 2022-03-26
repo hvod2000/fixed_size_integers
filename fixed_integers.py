@@ -17,7 +17,7 @@ class Int:
     def split(self, *sizes):
         assert len(self.bits) == sum(sizes)
         sizes = reduce(lambda lt, s: lt + [(s, sum(lt[-1]))], sizes, [(0, 0)])
-        yield from (Int(self.bits[off : off + size]) for size, off in sizes)
+        yield from (Int(self.bits[off : off + size]) for size, off in sizes[1:])
 
     def __matmul__(self, other):
         return Int(self.bits + other.bits)
