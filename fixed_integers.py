@@ -11,6 +11,16 @@ class Int:
         else:
             raise Exception()
 
+    def __matmul__(self, other):
+        return Int(self.bits + other.bits)
+
+    def __imatmul__(self, value):
+        self.value = value.u if isinstance(value, Int) else value
+        return self
+
+    def __str__(self):
+        return f"{self.i}:i{len(self.bits)}"
+
     @property
     def value(self):
         return sum(b.value * 2**p for p, b in enumerate(self.bits))
