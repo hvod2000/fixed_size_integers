@@ -30,6 +30,15 @@ def implement_unary_op(op):
     return namespace[op]
 
 
+def implement_mutation(op, gen_setter):
+    namespace, mutation = {}, gen_setter(f"int(self).__{op}__(other)")
+    definition = f"""def __i{op}__(self, other):
+    {mutation}
+    return self"""
+    exec(definition, namespace)
+    return namespace[f"__i{op}__"]
+
+
 def has_method(cls, method):
     for cls in cls.mro():
         if cls is object:
@@ -52,7 +61,9 @@ unary_operations = list(
 )
 
 
-def numberizate(cls=None):
+def numberizate(cls=None, assignment=None):
+    if cls is None:
+        return lambda cls: numberizate(cls, assignment)
     assert "__int__" in cls.__dict__
     for method in (f"__{op}__" for op in binary_operations):
         if not has_method(cls, method):
@@ -66,4 +77,13 @@ def numberizate(cls=None):
             cls = add_method(cls, method, implement_unary_op(method))
         else:
             print("DUPLICATE", method)
+    if assignment is None:
+        return add_parent(cls, Integral)
+    for method in binary_operations:
+        if not has_method(cls, f"__i{method}__"):
+            print("add", f"__i{method}__")
+            mutation = implement_mutation(method, assignment)
+            cls = add_method(cls, f"__i{method}__", mutation)
+        else:
+            print("DUPLICATE", f"__i{method}__")
     return add_parent(cls, Integral)
